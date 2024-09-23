@@ -1,5 +1,6 @@
 const path = require("path");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
+const ManifestPlugin = require("./manifest-plugin");
 
 module.exports = {
   entry: "./src/index.js",
@@ -36,5 +37,6 @@ module.exports = {
       },
       shared: ["react", "react-dom", "react-router-dom"],
     }),
+    new ManifestPlugin(),
   ],
 };

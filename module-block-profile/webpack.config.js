@@ -2,6 +2,7 @@ const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const ManifestPlugin = require("./manifest-plugin");
 
 module.exports = {
   entry: "./src/index.js",
@@ -10,7 +11,7 @@ module.exports = {
     static: {
       directory: path.join(__dirname, "dist"),
     },
-    port: 3002,
+    port: 3003,
     headers: {
       "Access-Control-Allow-Origin": "*", // Autorise les requêtes de toutes les origines
     },
@@ -28,16 +29,12 @@ module.exports = {
         use: "babel-loader",
       },
       {
-        test: /\.json$/,
-        type: "json",
-      },
-      {
         test: /\.svg$/,
         use: [
           {
             loader: "file-loader",
             options: {
-              name: "icons/[name].[ext]",
+              name: "icons/[name].[ext]", // Placez les SVG dans /dist/icons
             },
           },
         ],
@@ -50,39 +47,18 @@ module.exports = {
       patterns: [
         {
           from: path.resolve(__dirname, "src/assets/icons"), // Source des SVG
-          to: path.resolve(__dirname, "dist/icons"),
+          to: path.resolve(__dirname, "dist/icons"), // Destination dans /dist/icons
         },
       ],
     }),
     new ModuleFederationPlugin({
-      name: "module_leadboard",
+      name: "module_profile_stats",
       filename: "remoteEntry.js",
       exposes: {
         "./app": "./src/app.jsx",
-        "./translations": "./src/translations/index.js",
       },
-      shared: {
-        react: {
-          singleton: true,
-          requiredVersion: require("./package.json").dependencies.react,
-        },
-        "react-dom": {
-          singleton: true,
-          requiredVersion: require("./package.json").dependencies["react-dom"],
-        },
-        "react-i18next": {
-          singleton: true,
-          requiredVersion:
-            require("./package.json").dependencies["react-i18next"],
-        },
-        i18next: {
-          singleton: true,
-          requiredVersion: require("./package.json").dependencies["i18next"],
-        },
-      },
+      shared: ["react", "react-dom"],
     }),
+    new ManifestPlugin(),
   ],
-  resolve: {
-    extensions: [".js", ".jsx", ".json"],
-  },
 };

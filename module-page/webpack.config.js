@@ -2,6 +2,7 @@ const path = require("path");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const ManifestPlugin = require("./manifest-plugin");
 
 module.exports = {
   entry: "./src/index.js",
@@ -81,6 +82,7 @@ module.exports = {
         },
       },
     }),
+    new ManifestPlugin(),
   ],
   resolve: {
     extensions: [".js", ".jsx", ".json"],
