@@ -15,7 +15,7 @@ class ManifestPlugin {
         path: packageJson.customData?.path || "",
         type: packageJson.customData?.type || "",
         translations: null,
-        authors: packageJson.customData?.authors || [],
+        authors: packageJson.contributors || [],
       };
 
       // Écriture du fichier manifest.json dans le dossier dist
