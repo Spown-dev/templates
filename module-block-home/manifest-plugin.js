@@ -14,7 +14,6 @@ class ManifestPlugin {
         export: "default",
         path: packageJson.customData?.path || "",
         type: packageJson.customData?.type || "",
-        translations: null,
         authors: packageJson.contributors || [],
       };
 
